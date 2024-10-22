@@ -1,0 +1,23 @@
+meta {
+  name: GET
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/get
+  body: none
+  auth: none
+}
+
+headers {
+  queue-name: DEV.QUEUE.1
+}
+
+assert {
+  res.status: eq 200
+  res.body: eq "Hello Q!"
+  res.headers["correlation-id"]: eq "42"
+  res.headers["ccsid"]: eq "UTF-8"
+  res.headers["encoding"]: eq "273"
+}
