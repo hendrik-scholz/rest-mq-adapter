@@ -1,0 +1,9 @@
+services:
+  queue-manager:
+    image: "ibmcom/mq"
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+    ports:
+      - "1414:1414"
+      - "9443:9443"
