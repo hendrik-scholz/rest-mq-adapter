@@ -1,0 +1,1 @@
+# rest-mq-adapter
