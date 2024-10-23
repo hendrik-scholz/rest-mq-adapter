@@ -1,4 +1,4 @@
-package com.example.mq_spring;
+package name.hendrik_scholz.mq.adapter;
 
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
@@ -7,19 +7,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MqGet {
 
-    @Autowired
     private JmsTemplate jmsTemplate;
 
-    @GetMapping("get")
-    ResponseEntity<String> mqGet(@RequestHeader("queue-name") String queueName){
+    @Autowired
+    public MqGet(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+        this.jmsTemplate.setReceiveTimeout(5000);
+    }
+
+    @GetMapping("get/{queueName}")
+    ResponseEntity<String> mqGet(@PathVariable String queueName){
         try {
-            Message message = jmsTemplate.receive(queueName);
+            Message message = this.jmsTemplate.receive(queueName);
+
+            if (message == null) {
+                return ResponseEntity.noContent().build();
+            }
 
             try {
                 return ResponseEntity.ok()

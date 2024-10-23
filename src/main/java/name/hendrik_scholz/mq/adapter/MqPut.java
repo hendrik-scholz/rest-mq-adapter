@@ -1,4 +1,4 @@
-package com.example.mq_spring;
+package name.hendrik_scholz.mq.adapter;
 
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,8 +19,8 @@ public class MqPut {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @PostMapping("put")
-    String mqPut(@RequestHeader("queue-name") String queueName,
+    @PostMapping("put/{queueName}")
+    String mqPut(@PathVariable String queueName,
                  @RequestHeader("message-type") String messageType,
                  @RequestHeader("encoding") String encoding,
                  @RequestHeader("ccsid") String ccsid,

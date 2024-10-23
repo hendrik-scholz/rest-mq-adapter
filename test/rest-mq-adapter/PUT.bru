@@ -1,17 +1,16 @@
 meta {
   name: PUT
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
-  url: {{baseUrl}}/put
+  url: {{baseUrl}}/put/DEV.QUEUE.1
   body: text
   auth: none
 }
 
 headers {
-  queue-name: DEV.QUEUE.1
   message-type: MQSTR
   encoding: 273
   ccsid: 1208

@@ -1,17 +1,13 @@
 meta {
   name: GET
   type: http
-  seq: 2
+  seq: 3
 }
 
 get {
-  url: {{baseUrl}}/get
+  url: {{baseUrl}}/get/DEV.QUEUE.1
   body: none
   auth: none
-}
-
-headers {
-  queue-name: DEV.QUEUE.1
 }
 
 assert {
