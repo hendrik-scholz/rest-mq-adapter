@@ -11,6 +11,11 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.stream.Collectors;
+
 @Service
 public class MqMock {
 
@@ -20,9 +25,16 @@ public class MqMock {
     @Value("${mock.target.queue}")
     private String targetQueue;
 
+    @Value("${mock.response.file}")
+    private String responseFile;
+
     @JmsListener(destination = "${mock.source.queue}")
     public void receiveMessage(JmsMessage jmsMessage) {
         try {
+            BufferedReader br = new BufferedReader(new FileReader(responseFile));
+
+            String mockResponse = br.lines().collect(Collectors.joining());
+
             String messageId = jmsMessage.getJMSMessageID();
             String inputMessage = ((TextMessage)jmsMessage).getText();
 
@@ -30,7 +42,6 @@ public class MqMock {
             System.out.println("inputMessage: " + inputMessage);
 
             jmsTemplate.send(targetQueue, session -> {
-                String mockResponse = "mock response";
                 TextMessage message = session.createTextMessage(mockResponse);
 
                 // Customize the message encoding via MessagePostProcessor
@@ -46,6 +57,8 @@ public class MqMock {
                 return postProcessor.postProcessMessage(message);
             });
         } catch (JMSException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
