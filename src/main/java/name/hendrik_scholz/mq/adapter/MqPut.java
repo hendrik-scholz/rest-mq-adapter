@@ -1,8 +1,9 @@
 package name.hendrik_scholz.mq.adapter;
 
+import com.ibm.mq.constants.MQConstants;
+import jakarta.jms.BytesMessage;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
-import jakarta.jms.TextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.nio.charset.StandardCharsets;
 
 @RestController
 public class MqPut {
@@ -27,9 +30,17 @@ public class MqPut {
                  @RequestHeader("correlation-id") String correlationId,
                  @RequestBody String msg){
         try {
-            // TODO: create message depending on message type - text or binary
             jmsTemplate.send(queueName, session -> {
-                TextMessage message = session.createTextMessage(msg);
+                Message message;
+
+                if (messageType.equals(MQConstants.MQFMT_STRING.trim())) {
+                    message = session.createTextMessage(msg);
+                } else if (messageType.equals(MQConstants.MQFMT_NONE.trim())) {
+                    message = session.createBytesMessage();
+                    ((BytesMessage)message).writeBytes(msg.getBytes(StandardCharsets.UTF_8));
+                } else {
+                    throw new RuntimeException("Unknown format");
+                }
 
                 // Customize the message encoding via MessagePostProcessor
                 MessagePostProcessor postProcessor = new MessagePostProcessor() {
