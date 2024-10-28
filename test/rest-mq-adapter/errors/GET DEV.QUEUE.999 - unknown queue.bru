@@ -1,0 +1,16 @@
+meta {
+  name: GET DEV.QUEUE.999 - unknown queue
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/get/DEV.QUEUE.999
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 500
+  res.body.errorMessage: eq "JMSWMQ2008: Failed to open MQ queue 'DEV.QUEUE.999'.; nested exception is com.ibm.mq.MQException: JMSCMQ0001: IBM MQ call failed with compcode '2' ('MQCC_FAILED') reason '2085' ('MQRC_UNKNOWN_OBJECT_NAME')."
+}

@@ -7,7 +7,6 @@ import jakarta.jms.TextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,27 +38,22 @@ public class MqGet {
     }
 
     @GetMapping("get/{queueName}")
-    ResponseEntity<String> mqGet(@PathVariable String queueName) {
-        try {
-            Message message = this.jmsTemplate.receive(queueName);
+    ResponseEntity<String> mqGet(@PathVariable String queueName) throws JMSException {
+        Message message = this.jmsTemplate.receive(queueName);
 
-            if (message == null) {
-                return ResponseEntity.noContent().build();
-            }
-
-            String messageType = getMessageType(message);
-            String payload = messageConverter.getMessage(message);
-
-            return ResponseEntity.ok()
-                .header(CORRELATION_ID.toString(), message.getJMSCorrelationID())
-                .header(CCSID.toString(), String.valueOf(message.getStringProperty(JMS_IBM_CHARACTER_SET)))
-                .header(ENCODING.toString(), String.valueOf(message.getIntProperty(JMS_IBM_ENCODING)))
-                .header(MESSAGE_TYPE.toString(), messageType)
-                .body(payload);
-        } catch(JmsException | JMSException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+        if (message == null) {
+            return ResponseEntity.noContent().build();
         }
+
+        String messageType = getMessageType(message);
+        String payload = messageConverter.getMessage(message);
+
+        return ResponseEntity.ok()
+            .header(CORRELATION_ID.toString(), message.getJMSCorrelationID())
+            .header(CCSID.toString(), String.valueOf(message.getStringProperty(JMS_IBM_CHARACTER_SET)))
+            .header(ENCODING.toString(), String.valueOf(message.getIntProperty(JMS_IBM_ENCODING)))
+            .header(MESSAGE_TYPE.toString(), messageType)
+            .body(payload);
     }
 
     private String getMessageType(Message message) {

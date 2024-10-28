@@ -1,7 +1,6 @@
 package name.hendrik_scholz.mq.adapter;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,18 +27,13 @@ public class MqPut {
                          @RequestHeader("ccsid") String ccsid,
                          @RequestHeader("correlation-id") String correlationId,
                          @RequestBody String msg) {
-        try {
-            customMessageCreator.setCcsid(ccsid);
-            customMessageCreator.setCorrelationId(correlationId);
-            customMessageCreator.setEncoding(encoding);
-            customMessageCreator.setMessageTypeLabel(messageTypeLabel);
-            customMessageCreator.setMsg(msg);
-            jmsTemplate.send(queueName, customMessageCreator);
+        customMessageCreator.setCcsid(ccsid);
+        customMessageCreator.setCorrelationId(correlationId);
+        customMessageCreator.setEncoding(encoding);
+        customMessageCreator.setMessageTypeLabel(messageTypeLabel);
+        customMessageCreator.setMessage(msg);
+        jmsTemplate.send(queueName, customMessageCreator);
 
-            return ResponseEntity.accepted().build();
-        } catch(JmsException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.accepted().build();
     }
 }

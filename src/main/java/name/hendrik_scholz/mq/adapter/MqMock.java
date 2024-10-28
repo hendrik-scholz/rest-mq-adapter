@@ -69,11 +69,11 @@ public class MqMock {
             customMessageCreator.setCorrelationId(messageId);
             customMessageCreator.setEncoding(encoding);
             customMessageCreator.setMessageTypeLabel(messageType);
-            customMessageCreator.setMsg(mockResponse);
+            customMessageCreator.setMessage(mockResponse);
 
             jmsTemplate.send(targetQueue, customMessageCreator);
-        } catch (IOException | JMSException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | JMSException exception) {
+            log.error(exception.getMessage(), exception);
         }
     }
 }

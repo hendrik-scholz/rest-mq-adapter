@@ -5,6 +5,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
 import name.hendrik_scholz.mq.adapter.enums.MessageType;
+import name.hendrik_scholz.mq.adapter.exception.MessageTypeException;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class CustomMessageCreator implements MessageCreator {
     private String correlationId;
     private String encoding;
     private String messageTypeLabel;
-    private String msg;
+    private String message;
 
     public void setCcsid(String ccsid) {
         this.ccsid = ccsid;
@@ -40,22 +41,23 @@ public class CustomMessageCreator implements MessageCreator {
         this.messageTypeLabel = messageTypeLabel;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
     public Message createMessage(Session session) throws JMSException {
-        Message message;
+        Message messageToEnqueue;
         MessageType messageType = MessageType.valueOfLabel(messageTypeLabel);
 
         if (messageType == TEXT) {
-            message = session.createTextMessage(msg);
+            messageToEnqueue = session.createTextMessage(this.message);
         } else if (messageType == BINARY) {
-            message = session.createBytesMessage();
-            ((BytesMessage)message).writeBytes(msg.getBytes(UTF_8));
+            messageToEnqueue = session.createBytesMessage();
+            ((BytesMessage)messageToEnqueue).writeBytes(this.message.getBytes(UTF_8));
         } else {
-            throw new RuntimeException("Unknown format");
+            throw new MessageTypeException(String.format("Invalid message type '%s'. Valid types are '%s' or '%s'.",
+                messageTypeLabel, BINARY, TEXT));
         }
 
         MessagePostProcessor postProcessor = msg -> {
@@ -65,6 +67,6 @@ public class CustomMessageCreator implements MessageCreator {
             return msg;
         };
 
-        return postProcessor.postProcessMessage(message);
+        return postProcessor.postProcessMessage(messageToEnqueue);
     }
 }
