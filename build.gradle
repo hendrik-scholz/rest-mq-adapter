@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'com.google.cloud.tools.jib' version '3.4.4'
 }
 
 group = 'name.hendrik_scholz'
@@ -29,4 +30,16 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jib {
+	from {
+		image = 'amazoncorretto:17.0.13-alpine3.20'
+	}
+	to {
+		image = 'rest-mq-adapter:1.0.0-SNAPSHOT'
+	}
+	container {
+		ports = ['8080']
+	}
 }
