@@ -22,10 +22,10 @@ public class MqPut {
 
     @PostMapping("put/{queueName}")
     ResponseEntity<Void> mqPut(@PathVariable String queueName,
-                         @RequestHeader("message-type") String messageTypeLabel,
-                         @RequestHeader("encoding") String encoding,
-                         @RequestHeader("ccsid") String ccsid,
-                         @RequestHeader("correlation-id") String correlationId,
+                         @RequestHeader(value = "message-type", defaultValue = "text") String messageTypeLabel,
+                         @RequestHeader(value = "encoding", defaultValue = "273") String encoding,
+                         @RequestHeader(value = "ccsid", defaultValue = "1208") String ccsid,
+                         @RequestHeader(value = "correlation-id", defaultValue = "42") String correlationId,
                          @RequestBody String msg) {
         customMessageCreator.setCcsid(ccsid);
         customMessageCreator.setCorrelationId(correlationId);
