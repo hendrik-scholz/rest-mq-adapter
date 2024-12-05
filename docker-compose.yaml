@@ -12,7 +12,6 @@ services:
     hostname: rest-mq-adapter
     image: rest-mq-adapter:1.0.0-SNAPSHOT
     environment:
-      MQ_HOST: queue-manager
       QUEUE_MANAGER: QM1
       CHANNEL: DEV.ADMIN.SVRCONN
       CONNECTION_NAME: queue-manager(1414)
