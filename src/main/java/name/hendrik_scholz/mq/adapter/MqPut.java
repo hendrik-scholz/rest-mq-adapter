@@ -21,7 +21,7 @@ public class MqPut {
     }
 
     @PostMapping("put/{queueName}")
-    ResponseEntity<Void> mqPut(@PathVariable String queueName,
+    public ResponseEntity<Void> mqPut(@PathVariable String queueName,
                          @RequestHeader(value = "message-type", defaultValue = "text") String messageTypeLabel,
                          @RequestHeader(value = "encoding", defaultValue = "273") String encoding,
                          @RequestHeader(value = "ccsid", defaultValue = "1208") String ccsid,

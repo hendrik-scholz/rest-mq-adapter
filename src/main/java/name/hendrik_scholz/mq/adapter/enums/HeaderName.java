@@ -8,7 +8,7 @@ public enum HeaderName {
     CCSID("ccsid"),
     CORRELATION_ID("correlation-id");
 
-    private String label;
+    private final String label;
 
     private static final HashMap<String, HeaderName> headerMap = new HashMap<>();
 

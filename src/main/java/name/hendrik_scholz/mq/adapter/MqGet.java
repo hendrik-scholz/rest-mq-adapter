@@ -38,8 +38,8 @@ public class MqGet {
     }
 
     @GetMapping("get/{queueName}")
-    ResponseEntity<String> mqGet(@PathVariable String queueName) throws JMSException {
-        Message message = this.jmsTemplate.receive(queueName);
+    public ResponseEntity<String> mqGet(@PathVariable String queueName) throws JMSException {
+        var message = this.jmsTemplate.receive(queueName);
 
         if (message == null) {
             return ResponseEntity.noContent().build();
@@ -57,7 +57,7 @@ public class MqGet {
     }
 
     private String getMessageType(Message message) {
-        String messageType = "n/a";
+        var messageType = "n/a";
 
         if (message instanceof BytesMessage) {
             messageType = BINARY.toString();

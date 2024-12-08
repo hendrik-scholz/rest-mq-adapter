@@ -9,5 +9,4 @@ class MqSpringApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

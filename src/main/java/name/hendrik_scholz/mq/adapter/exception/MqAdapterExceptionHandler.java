@@ -23,8 +23,8 @@ public class MqAdapterExceptionHandler {
             .body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler(value = { MessageTypeException.class })
-    public  ResponseEntity<ErrorDto> handleMessageFormatException(MessageTypeException exception) {
+    @ExceptionHandler(value = { UnsupportedMessageTypeException.class })
+    public  ResponseEntity<ErrorDto> handleMessageFormatException(UnsupportedMessageTypeException exception) {
         log.error(exception.getMessage(), exception);
         return ResponseEntity.badRequest()
             .body(new ErrorDto(exception.getMessage()));

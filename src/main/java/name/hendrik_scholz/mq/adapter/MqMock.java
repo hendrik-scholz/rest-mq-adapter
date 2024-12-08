@@ -57,7 +57,7 @@ public class MqMock {
 
     @JmsListener(destination = "${mock.source.queue}")
     public void receiveMessage(JmsMessage jmsMessage) {
-        try (BufferedReader br = new BufferedReader(new FileReader(responseFile))) {
+        try (var br = new BufferedReader(new FileReader(responseFile))) {
             String mockResponse = br.lines().collect(Collectors.joining());
             String messageId = jmsMessage.getJMSMessageID();
 

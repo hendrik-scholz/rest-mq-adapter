@@ -1,5 +1,7 @@
 # rest-mq-adapter
 
+The REST MQ adapter provides a REST interface to access a queue manager that does not natively support a REST interface.
+
 ## Configuration
 
 The following environment variables are available to configure the REST MQ adapter.
@@ -25,7 +27,7 @@ The following environment variables are available to configure the REST MQ adapt
 
 ## OpenAPI
 
-After starting REST MQ adapter, the Swagger UI and the OpenAPI specification are available under the following endpoints. 
+After starting the REST MQ adapter, the Swagger UI and the OpenAPI specification are available under the following endpoints. 
 
 http://localhost:8080/swagger-ui/index.html
 

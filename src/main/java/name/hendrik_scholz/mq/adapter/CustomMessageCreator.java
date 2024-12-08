@@ -5,7 +5,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
 import name.hendrik_scholz.mq.adapter.enums.MessageType;
-import name.hendrik_scholz.mq.adapter.exception.MessageTypeException;
+import name.hendrik_scholz.mq.adapter.exception.UnsupportedMessageTypeException;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class CustomMessageCreator implements MessageCreator {
     @Override
     public Message createMessage(Session session) throws JMSException {
         Message messageToEnqueue;
-        MessageType messageType = MessageType.valueOfLabel(messageTypeLabel);
+        var messageType = MessageType.valueOfLabel(messageTypeLabel);
 
         if (messageType == TEXT) {
             messageToEnqueue = session.createTextMessage(this.message);
@@ -56,7 +56,7 @@ public class CustomMessageCreator implements MessageCreator {
             messageToEnqueue = session.createBytesMessage();
             ((BytesMessage)messageToEnqueue).writeBytes(this.message.getBytes(UTF_8));
         } else {
-            throw new MessageTypeException(String.format("Invalid message type '%s'. Valid types are '%s' or '%s'.",
+            throw new UnsupportedMessageTypeException(String.format("Invalid message type '%s'. Valid types are '%s' or '%s'.",
                 messageTypeLabel, BINARY, TEXT));
         }
 

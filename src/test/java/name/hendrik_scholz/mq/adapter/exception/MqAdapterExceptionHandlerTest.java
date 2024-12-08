@@ -16,7 +16,16 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 class MqAdapterExceptionHandlerTest {
 
     @Test
-    void handleException() {
+    void handleExceptionWhenJmsExceptionThenInternalServerError() {
+        MqAdapterExceptionHandler mqAdapterExceptionHandler = new MqAdapterExceptionHandler();
+        ResponseEntity<ErrorDto> responseEntity = mqAdapterExceptionHandler.handleException(new JmsException("Something went wrong!") {
+        });
+        assertEquals(INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals("Something went wrong!", Objects.requireNonNull(responseEntity.getBody()).errorMessage());
+    }
+
+    @Test
+    void handleExceptionWhenJMSExceptionThenInternalServerError() {
         MqAdapterExceptionHandler mqAdapterExceptionHandler = new MqAdapterExceptionHandler();
         ResponseEntity<ErrorDto> responseEntity = mqAdapterExceptionHandler.handleException(new JMSException("Something went wrong!", "0000"));
         assertEquals(INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
@@ -24,9 +33,9 @@ class MqAdapterExceptionHandlerTest {
     }
 
     @Test
-    void handleMessageFormatException() {
+    void handleMessageFormatExceptionWhenUnsupportedMessageTypeExceptionThenBadRequest() {
         MqAdapterExceptionHandler mqAdapterExceptionHandler = new MqAdapterExceptionHandler();
-        ResponseEntity<ErrorDto> responseEntity = mqAdapterExceptionHandler.handleMessageFormatException(new MessageTypeException("Wrong message type!"));
+        ResponseEntity<ErrorDto> responseEntity = mqAdapterExceptionHandler.handleMessageFormatException(new UnsupportedMessageTypeException("Wrong message type!"));
         assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals("Wrong message type!", Objects.requireNonNull(responseEntity.getBody()).errorMessage());
     }
