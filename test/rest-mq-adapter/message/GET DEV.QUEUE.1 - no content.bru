@@ -1,0 +1,15 @@
+meta {
+  name: GET DEV.QUEUE.1 - no content
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/get/DEV.QUEUE.1
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 204
+}

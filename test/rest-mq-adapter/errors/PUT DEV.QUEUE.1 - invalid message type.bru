@@ -1,0 +1,27 @@
+meta {
+  name: PUT DEV.QUEUE.1 - invalid message type
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/put/DEV.QUEUE.1
+  body: text
+  auth: none
+}
+
+headers {
+  message-type: invalid
+  encoding: 273
+  ccsid: 1208
+  correlation-id: 42
+}
+
+body:text {
+  Hello Q!
+}
+
+assert {
+  res.status: eq 400
+  res.body.errorMessage: eq "Invalid message type 'invalid'. Valid types are 'binary' or 'text'."
+}

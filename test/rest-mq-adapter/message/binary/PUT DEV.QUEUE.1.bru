@@ -1,0 +1,26 @@
+meta {
+  name: PUT DEV.QUEUE.1
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/put/DEV.QUEUE.1
+  body: text
+  auth: none
+}
+
+headers {
+  message-type: binary
+  encoding: 273
+  ccsid: 1208
+  correlation-id: 42
+}
+
+body:text {
+  Hello Q!
+}
+
+assert {
+  res.status: eq 202
+}

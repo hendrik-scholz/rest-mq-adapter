@@ -1,0 +1,20 @@
+meta {
+  name: GET DEV.QUEUE.3
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/get/DEV.QUEUE.3
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body: eq "mock response from file"
+  res.headers["ccsid"]: eq "UTF-8"
+  res.headers["encoding"]: eq "273"
+  res.headers["message-type"]: eq "text"
+  res.headers["correlation-id"]: length 51
+}
