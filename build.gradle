@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'name.hendrik_scholz'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
 	toolchain {
@@ -38,7 +38,7 @@ jib {
 		image = 'amazoncorretto:17.0.13-alpine3.20'
 	}
 	to {
-		image = 'rest-mq-adapter:1.0.0-SNAPSHOT'
+		image = 'rest-mq-adapter:1.0.0'
 	}
 	container {
 		ports = ['8080']
